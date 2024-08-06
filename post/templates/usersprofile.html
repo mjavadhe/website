@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        {% extends 'base.html' %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+</head>
+<body>
+{% block content %}
+    {% for user in users %}
+        {% if forloop.first %}
+            <form method="post">
+                <p align="center">user id: {{ user.pk }}</p>
+                {% csrf_token %}
+                <label for="email">email:</label>
+                <p type="text" id="email" name="email" maxlength="50" required>
+                   <h4 align="center"><a href="#">{{ user.email }}</a></h4>
+                </p><br>
+                <label for="title">username:</label>
+                <p type="text" id="title" name="title" maxlength="50" required>
+                    <h2>{{ user.username }}</h2>
+                </p><br>
+                <label for="text">date joined:</label>
+                <p type="text" id="title" name="title" maxlength="50" required>
+                    <h2>{{ user.date_joined }}</h2>
+                </p><br>
+
+                <button><a href="#">direct</a></button>
+            </form>
+        {% endif %}
+    {% endfor %}
+<style>
+html, body {
+    height: 100%;
+    width: 100%;
+    place-items: center;
+    background: -webkit-linear-gradient(left, #9896F0, #FBC8D5);
+}
+
+form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+}
+
+form label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+form input[type="text"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form button {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+form button:hover {
+    background: #45a049;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+button a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    form {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    form input[type="text"],
+    form textarea {
+        padding: 8px;
+    }
+
+    form button {
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    form {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    form input[type="text"],
+    form textarea {
+        padding: 5px;
+    }
+
+    form button {
+        padding: 5px 10px;
+    }
+}
+</style>
+{% endblock %}
+</body>
+</html>

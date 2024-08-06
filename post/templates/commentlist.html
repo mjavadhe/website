@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'base.html' %}
+</head>
+<body>
+{% block content %}
+{% for comment in comments %}
+<h2>Comments</h2>
+
+    <p>writer: <a href="/users/{{ comment.author.pk }}/">{{ comment.author.username }}</a> - Text: {{ comment.text }}</p>
+{% endfor %}
+
+{% for post in posts %}
+    {% if forloop.first %}
+        <button><a href="/commentlist/{{post.id}}/comments/">Create a Comment for this post</a></button>
+    {% endif %}
+{% endfor %}
+{% endblock %}
+</body>
+</html>
