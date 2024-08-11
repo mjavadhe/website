@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-<<<<<<< HEAD
 from django.http import HttpResponseRedirect , JsonResponse
 from .models import Post , Comment , CustomUser
-=======
 from django.http import HttpResponseRedirect, JsonResponse
 from .models import Post, Comment, CustomUser
->>>>>>> b958a7abe557a46e3e3c3f2f9128024980177d69
 from .forms import PostForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -78,7 +75,6 @@ def createPost(request):
 
 
 @login_required(login_url='/login_register/')
-@login_required(login_url='/login_register/')
 def createPost(request):
     user = CustomUser.objects.all()
     if request.method == 'POST':
@@ -95,38 +91,6 @@ def createPost(request):
     return render(request, 'createpost.html', {'user': user})
 
 
-def login(request):
-    if request.method == 'POST':
-        if 'register' in request.POST:
-            username = request.POST.get('username')
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            user = CustomUser.objects.create_user(username=username, email=email, password=password)
-            login(request, user)  # Ensure this is the correct login function
-            return redirect('home')
-        elif 'login' in request.POST:
-            login_identifier = request.POST.get('login_identifier')
-            password = request.POST.get('password')
-            user = CustomUser.objects.filter(email=login_identifier).first() or CustomUser.objects.filter(
-                username=login_identifier).first()
-            if user:
-                user = authenticate(request, username=user.username, password=password)
-                if user is not None and user.is_active:
-                    login(request, user)  # Ensure this is the correct login function
-                    return redirect('home')
-                else:
-                    return render(request, 'login.html', {'error': 'Invalid credentials'})
-    elif request.method == 'GET' and 'username' in request.GET:
-        username = request.GET.get('username', None)
-        data = {
-            'exists': CustomUser.objects.filter(username=username).exists()
-        }
-        return JsonResponse(data)
-
-    return render(request, 'form.html')
->>>>>>> b958a7abe557a46e3e3c3f2f9128024980177d69
-
-
 def login_register(request):
     if request.method == 'POST':
         if 'register' in request.POST:
@@ -139,35 +103,14 @@ def login_register(request):
         elif 'login' in request.POST:
             login_identifier = request.POST.get('login_identifier')
             password = request.POST.get('password')
-            user = CustomUser.objects.filter(email=login_identifier).first() or CustomUser.objects.filter(
-                username=login_identifier).first()
+            user = CustomUser.objects.filter(email=login_identifier).first() or CustomUser.objects.filter(username=login_identifier).first()
             if user:
                 user = authenticate(request, username=user.username, password=password)
                 if user is not None and user.is_active:
                     login(request, user)
                     return redirect('home')
-    elif request.method == 'GET' and 'username' in request.GET:
-        username = request.GET.get('username', None)
-        data = {
-            'exists': CustomUser.objects.filter(username=username).exists()
-        }
-        return JsonResponse(data)
-<<<<<<< HEAD
+
     return render(request, 'form.html')
-=======
-    print(user)
-    return render(request, 'login.html')
->>>>>>> b958a7abe557a46e3e3c3f2f9128024980177d69
-
-
-
-
-
-
-
-
-
-
 
 
 @login_required(login_url='/login_register/')

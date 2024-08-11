@@ -26,10 +26,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField()
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
-<<<<<<< HEAD
-=======
 
->>>>>>> b958a7abe557a46e3e3c3f2f9128024980177d69
     def __str__(self):
         return self.title
 
