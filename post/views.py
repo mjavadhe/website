@@ -1,6 +1,6 @@
 from django.shortcuts import render ,redirect
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect , JsonResponse
 from .models import Post , Comment , CustomUser
 from .forms import PostForm
 from django.contrib.auth import login, authenticate
@@ -48,15 +48,20 @@ def createComment(request, postId):
 def createPost(request):
     user = CustomUser.objects.all()
     if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
+        title = request.POST.get('title')
+        text = request.POST.get('text')
+        image = request.FILES.get('image')
+
+        if title and text:
+            post = Post(author=request.user, title=title, text=text)
+            if image:
+                post.image = image
             post.save()
             return redirect('post_detail', post_id=post.id)
-    else:
-        form = PostForm()
-    return render(request, 'createpost.html', {'form': form , 'user' : user})
+    return render(request, 'createpost.html', {'user': user})
+
+
+
 
 def login_register(request):
     if request.method == 'POST':
@@ -70,14 +75,30 @@ def login_register(request):
         elif 'login' in request.POST:
             login_identifier = request.POST.get('login_identifier')
             password = request.POST.get('password')
-            user = CustomUser.objects.filter(email=login_identifier).first() or CustomUser.objects.filter(username=login_identifier).first()
+            user = CustomUser.objects.filter(email=login_identifier).first() or CustomUser.objects.filter(
+                username=login_identifier).first()
             if user:
                 user = authenticate(request, username=user.username, password=password)
                 if user is not None and user.is_active:
                     login(request, user)
                     return redirect('home')
-
+    elif request.method == 'GET' and 'username' in request.GET:
+        username = request.GET.get('username', None)
+        data = {
+            'exists': CustomUser.objects.filter(username=username).exists()
+        }
+        return JsonResponse(data)
     return render(request, 'form.html')
+
+
+
+
+
+
+
+
+
+
 
 
 @login_required(login_url='/login_register/')

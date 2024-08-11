@@ -25,6 +25,9 @@ class Post(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     text = models.TextField()
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
+    def __str__(self):
+        return self.title
 
 
 class Comment(models.Model):
