@@ -83,7 +83,7 @@ def createPost(request):
         image = request.FILES.get('image')
 
         if title and text:
-            post = Post(author=request.user, title=title, text=text)
+            post = Post(author=request.user, title=title, text=text , image=image)
             if image:
                 post.image = image
             post.save()
