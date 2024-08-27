@@ -63,11 +63,7 @@ def createPost(request):
                 post.image = image
             post.save()
             return redirect('post_detail', post_id=post.id)
-<<<<<<< HEAD
     return render(request, 'createpost.html', {'user': user})
-
-
-=======
     else:
         form = PostForm()
     return render(request, 'createpost.html', {'form': form , 'user' : user})
