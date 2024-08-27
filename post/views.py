@@ -45,7 +45,7 @@ def createComment(request, postId):
 
         if text:
             Comment.objects.create(author=request.user, post=post, text=text)
-            return HttpResponseRedirect(reverse('post_detail', args=[postId]))
+            return HttpResponseRedirect(reverse('commentlist', args=[postId]))
     return render(request, 'createcomment.html', {'post': post})
 
 
