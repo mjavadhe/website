@@ -67,8 +67,8 @@ def createPost(request):
     else:
         form = PostForm()
     return render(request, 'createpost.html', {'form': form , 'user' : user})
-"""
 
+"""
 
 @login_required(login_url='/login_register/')
 def createPost(request):
