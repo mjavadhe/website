@@ -10,29 +10,66 @@
     {% for post in posts %}
         {% if forloop.first %}
             <form method="post" enctype="multipart/form-data">
-                <p align="center">post id: {{ post.pk }}</p>
+                <!--   <p align="center">post id: {{ post.pk }}</p>   -->
                 {% csrf_token %}
-                <label for="author">author:</label>
                 <p type="text" id="title" name="title" maxlength="50" required>
                     <h2><a href="/users/{{ post.author.pk }}/">{{ post.author.username }}</a></h2>
-                </p><br>
-                <label for="title">Title:</label>
-                <p type="text" id="title" name="title" maxlength="50" required>
-                    <h2>{{ post.title }}</h2>
-                </p><br>
-                <label for="text">Text:</label>
-                <p type="text" id="title" name="title" maxlength="50" required>
-                    <h2>{{ post.text }}</h2>
+                </p>
                 {% if post.image %}
                     </p><br>
-                        <label for="image">Image:</label>
                     <p></p>
                      <center><img src="{{ post.image.url }}" alt="Post Image" style="max-width: 100%; height: auto;"><br></center><br>
                 {% endif %}
-                <button><a href="/comments/{{post.id}}/">comments</a></button>
+                <div class="input-group mb-3">
+                    <button type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    caption & comments                
+                    </button>
+                    <br>
+                    </p>
+                    <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        <p type="text" id="title" name="title" maxlength="50" required>
+                            <h2>Caption</h2>
+
+                            {{ post.text }}               
+                            </div>
+                    </div>
+                    <buttontype="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    </button>
+                    </p>
+                    <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        {% for comment in comments %}
+                        {% if forloop.first %}
+                        
+                        <h2>Comments</h2>
+                        {%endif%}
+                            <p>writer: <a href="/users/{{ comment.author.pk }}/">{{ comment.author.username }}</a> <br> commet: {{ comment.text }}</p>
+                                -------
+                        {% endfor %}
+                        <br>
+                        {% for post in posts %}
+                            {% if forloop.first %}
+                                <button><a href="/commentlist/{{post.id}}/comments/">Create a Comment for this post</a></button>
+                            {% endif %}
+                        {% endfor %}            
+                        </div>
+                    </div>
+                </div>
+
+
+
+
             </form>
         {% endif %}
     {% endfor %}
+
+
+
+
+
+
+
 <style>
 html, body {
     height: 100%;

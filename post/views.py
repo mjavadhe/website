@@ -45,7 +45,7 @@ def createComment(request, postId):
 
         if text:
             Comment.objects.create(author=request.user, post=post, text=text)
-            return HttpResponseRedirect(reverse('commentlist', args=[postId]))
+            return HttpResponseRedirect(reverse('post_detail', args=[postId]))
     return render(request, 'createcomment.html', {'post': post})
 
 
@@ -74,17 +74,17 @@ def createPost(request):
 def createPost(request):
     user = CustomUser.objects.all()
     if request.method == 'POST':
-        title = request.POST.get('title')
         text = request.POST.get('text')
         image = request.FILES.get('image')
 
-        if title and text:
-            post = Post(author=request.user, title=title, text=text , image=image)
+        if  text:
+            post = Post(author=request.user, text=text , image=image)
             if image:
                 post.image = image
             post.save()
             return redirect('post_detail', post_id=post.id)
     return render(request, 'createpost.html', {'user': user})
+
 
 
 def login_register(request):
@@ -128,3 +128,5 @@ def userProfile(request, usersId):
     users = CustomUser.objects.get(pk=usersId), CustomUser.objects.all()
     context = {'users': users}
     return render(request, 'usersprofile.html', context)
+    
+

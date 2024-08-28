@@ -12,20 +12,20 @@
      <table class="table">
           <thead>
             <tr>
-              <th scope="col">id</th>
-              <th scope="col">title</th>
-              <th scope="col">text & comment</th>
+        {% if forloop.first %}
             </tr>
             </thead>
-
+        {% endif %}
             <tbody>
               <tr>
-                <th scope="row">{{ post.id }}</th>
-                <td>{{ post.title }}</td>
-                <td><a href="/posts/{{ post.id }}/">more</a></td>
+                {% if post.image %}
+                  <left><a href="/posts/{{ post.id }}/"><img src="{{ post.image.url }}" alt="Post Image" style="max-width: 20%; height: auto;"><br></a></left><br>
+                {% endif %}
               </tr>
+          
             </tbody>
           </table>
+        
     {% endfor %}
     <br>
     <br>

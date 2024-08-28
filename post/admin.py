@@ -10,7 +10,7 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 
 class PostAdmin(admin.ModelAdmin):
-    listDisplay = ['author', 'title', 'text' , 'image']
+    listDisplay = ['author', 'text' , 'image']
 
 
 admin.site.register(Post, PostAdmin)
