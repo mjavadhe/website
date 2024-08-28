@@ -20,43 +20,38 @@
                     <p></p>
                      <center><img src="{{ post.image.url }}" alt="Post Image" style="max-width: 100%; height: auto;"><br></center><br>
                 {% endif %}
-                <div class="input-group mb-3">
+               <div align=center class="input-group mb-3">
                     <button type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     caption & comments                
+                    
                     </button>
-                    <br>
-                    </p>
                     <div class="collapse" id="collapseExample">
                     <div class="card card-body">
-                        <p type="text" id="title" name="title" maxlength="50" required>
+                        <p type="text" id="title" name="title" maxlength="250" required></p>
                             <h2>Caption</h2>
-
-                            {{ post.text }}               
+                            -------------------------------
+                            <center>{{ post.text }}</center>               
+                            </p>
+                            <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                {% for comment in comments %}
+                                {% if forloop.first %}
+                                
+                                <h2>Comments</h2>
+                                {%endif%}
+                                    <p>writer: <a href="/users/{{ comment.author.pk }}/">{{ comment.author.username }}</a> <br> commet: {{ comment.text }}</p>
+                                        -------
+                                {% endfor %}
+                                <br>
+                                {% for post in posts %}
+                                    {% if forloop.first %}
+                                        <button><a href="/commentlist/{{post.id}}/comments/">Create a Comment for this post</a></button>
+                                    {% endif %}
+                                {% endfor %}            
                             </div>
+                            </div>  
                     </div>
-                    <buttontype="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    </button>
-                    </p>
-                    <div class="collapse" id="collapseExample">
-                    <div class="card card-body">
-                        {% for comment in comments %}
-                        {% if forloop.first %}
-                        
-                        <h2>Comments</h2>
-                        {%endif%}
-                            <p>writer: <a href="/users/{{ comment.author.pk }}/">{{ comment.author.username }}</a> <br> commet: {{ comment.text }}</p>
-                                -------
-                        {% endfor %}
-                        <br>
-                        {% for post in posts %}
-                            {% if forloop.first %}
-                                <button><a href="/commentlist/{{post.id}}/comments/">Create a Comment for this post</a></button>
-                            {% endif %}
-                        {% endfor %}            
-                        </div>
                     </div>
-                </div>
-
 
 
 
@@ -71,6 +66,54 @@
 
 
 <style>
+
+    .input-group {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+    
+    .collapse {
+        margin-top: 10px;
+    }
+    
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .center {
+        text-align: center;
+    }
+
+
+
+
+
 html, body {
     height: 100%;
     width: 100%;

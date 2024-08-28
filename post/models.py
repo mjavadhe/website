@@ -24,10 +24,10 @@ class CustomUser(AbstractUser):
 class Post(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     text = models.TextField()
-    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
+    image = models.ImageField(upload_to='post_images/')
 
     def __str__(self):
-        return self.title
+        return self.id
 
 
 class Comment(models.Model):
