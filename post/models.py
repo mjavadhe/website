@@ -26,8 +26,8 @@ class Post(models.Model):
     text = models.TextField()
     image = models.ImageField(upload_to='post_images/')
 
-    def __str__(self):
-        return self.id
+"""    def __str__(self):
+        return self.author"""
 
 
 class Comment(models.Model):

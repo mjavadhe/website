@@ -8,6 +8,7 @@ from .forms import PostForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+import random
 
 
 @login_required(login_url='/login_register/')
@@ -21,11 +22,18 @@ def homePage(request):
     return render(request, 'homepage.html')
 
 
-@login_required(login_url='/login_register/')
+"""@login_required(login_url='/login_register/')
 def postList(request):
     posts = Post.objects.all()
     context = {'posts': posts}
-    return render(request, 'postlist.html', context)
+    return render(request, 'postlist.html', context)"""
+
+
+
+def postList(request):
+    posts = list(Post.objects.all())
+    random.shuffle(posts)
+    return render(request, 'postlist.html', {'posts': posts})
 
 
 @login_required(login_url='/login_register/')
@@ -130,3 +138,7 @@ def userProfile(request, usersId):
     return render(request, 'usersprofile.html', context)
     
 
+@login_required(login_url='/login_register/')
+def myposts(request):
+    posts = Post.objects.filter(author=request.user)
+    return render(request, 'mypost.html', {'posts': posts})
