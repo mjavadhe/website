@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'base.html' %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    {% block content %}
+        <div class="container">
+            <div class="row">
+                {% for post in posts %}
+                    <div class="col-md-3">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <p type="text" id="title" name="title" maxlength="50" required>
+                                <h2><a href="/users/{{ post.author.pk }}/">{{ post.author.username }}</a></h2>
+                            </p>
+                            {% if post.image %}
+                                <center><a href="/posts/{{ post.id }}/"><img class="Image" name="Image" src="{{ post.image.url }}" alt="Post Image" style="max-width: 100%; height: auto;"></a><br></center><br>
+                            {% endif %}
+                            <div align=center class="input-group mb-3">
+                                <button type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
+                                    caption & comments                  
+                                </button>
+                                <a href="{% url 'editpost' post.id %}"><button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
+                                    edit               
+                                </a></button> &nbsp;&nbsp;
+                                <a href="{% url 'deletepost' post.sender %}"><button class="btn btn-danger" type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
+                                    delete                
+                                </a></button>
+                                <div class="collapse" id="collapseExample{{ forloop.counter }}">
+                                    <div class="card card-body">
+                                        <h2>Caption</h2>
+                                        -------------------------
+                                        <center>{{ post.sender }}</center>
+                                        <a href="/posts/{{ post.id }}/"><button type="button" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
+                                            comments                  
+                                        </a></button>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                    </div>
+                    {% if forloop.counter|divisibleby:4 %}
+                        </div><div class="row">
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+
+    
+<style>
+    .image{
+        padding: 1000px 100px;
+        margin: 1000px 100px;
+        border-radius: 5px;
+
+    }
+
+
+    .input-group {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+    
+    .collapse {
+        margin-top: 10px;
+    }
+    
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .center {
+        text-align: center;
+    }
+
+
+
+
+
+html, body {
+    height: 100%;
+    width: 100%;
+    place-items: center;
+    background: -webkit-linear-gradient(left, #9896F0, #FBC8D5);
+}
+
+form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+}
+
+form label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+form input[type="text"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form button {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+form button:hover {
+    background: #45a049;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+button a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    form {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    form input[type="text"],
+    form textarea {
+        padding: 8px;
+    }
+
+    form button {
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    form {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    form input[type="text"],
+    form textarea {
+        padding: 5px;
+    }
+
+    form button {
+        padding: 5px 10px;
+    }
+}
+</style>
+{% endblock %}
+</body>
+</html>

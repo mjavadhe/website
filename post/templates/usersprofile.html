@@ -25,7 +25,7 @@
                     <h2>{{ user.date_joined }}</h2>
                 </p><br>
 
-                <button><a href="#">direct</a></button>
+                <button><a href="{% url 'chatroom' user.username %}">direct</a></button>
             </form>
         {% endif %}
     {% endfor %}

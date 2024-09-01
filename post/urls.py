@@ -19,13 +19,7 @@ urlpatterns = [
     path('myposts/', views.myposts, name='myposts'),
     path('edit/<int:post_id>/', views.editPost, name='editpost'),
     path('delete/<int:post_id>/', views.deletePost, name='deletepost'),
-
-    path('send_message/', views.send_message, name='send_message'),
-    path('inbox/', views.inbox, name='inbox'),
-    path('direct/',views.direct)
-
-
-
-
+    path('chatroom/<str:recipient_username>/', views.chatroom, name='chatroom'),
+    path('my_chats/', views.my_chats, name='my_chats'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

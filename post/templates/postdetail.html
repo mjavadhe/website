@@ -40,6 +40,7 @@
                                 <h2>Comments</h2>
                                 {%endif%}
                                     <p><a href="/users/{{ comment.author.pk }}/">{{ comment.author.username }}</a> : {{ comment.text }}</p>
+                                        <h10><a align="left" href="#">reply</a></h10>
                                         -------
                                 {% endfor %}
                                 <br>
@@ -58,12 +59,6 @@
             </form>
         {% endif %}
     {% endfor %}
-
-
-
-
-
-
 
 <style>
 

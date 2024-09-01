@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponseRedirect , JsonResponse ,HttpResponseForbidden
+from django.http import HttpResponseRedirect
 from .models import Post , Comment , CustomUser
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from .models import Post, Comment, CustomUser , Message
 from .forms import PostForm
-from django.contrib.auth import login, authenticate , get_user_model
+from django.contrib.auth import login, authenticate , get_user_model ,logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
 import random
+from django.db.models import Q
+
 
 
 @login_required(login_url='/login_register/')
@@ -20,14 +21,6 @@ def logout_view(request):
 @login_required(login_url='/login_register/')
 def homePage(request):
     return render(request, 'homepage.html')
-
-
-"""@login_required(login_url='/login_register/')
-def postList(request):
-    posts = Post.objects.all()
-    context = {'posts': posts}
-    return render(request, 'postlist.html', context)"""
-
 
 
 def postList(request):
@@ -50,33 +43,11 @@ def createComment(request, postId):
     post = Post.objects.get(pk=postId)
     if request.method == 'POST':
         text = request.POST.get('text')
-
         if text:
             Comment.objects.create(author=request.user, post=post, text=text)
             return HttpResponseRedirect(reverse('post_detail', args=[postId]))
     return render(request, 'createcomment.html', {'post': post})
 
-
-"""@login_required(login_url='/login_register/')
-def createPost(request):
-    user = CustomUser.objects.all()
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        text = request.POST.get('text')
-        image = request.FILES.get('image')
-
-        if title and text:
-            post = Post(author=request.user, title=title, text=text)
-            if image:
-                post.image = image
-            post.save()
-            return redirect('post_detail', post_id=post.id)
-    return render(request, 'createpost.html', {'user': user})
-    else:
-        form = PostForm()
-    return render(request, 'createpost.html', {'form': form , 'user' : user})
-
-"""
 
 @login_required(login_url='/login_register/')
 def createPost(request):
@@ -84,7 +55,6 @@ def createPost(request):
     if request.method == 'POST':
         text = request.POST.get('text')
         image = request.FILES.get('image')
-
         if  text:
             post = Post(author=request.user, text=text , image=image)
             if image:
@@ -92,7 +62,6 @@ def createPost(request):
             post.save()
             return redirect('post_detail', post_id=post.id)
     return render(request, 'createpost.html', {'user': user})
-
 
 
 def login_register(request):
@@ -113,7 +82,6 @@ def login_register(request):
                 if user is not None and user.is_active:
                     login(request, user)
                     return redirect('home')
-
     return render(request, 'form.html')
 
 
@@ -148,8 +116,7 @@ def myposts(request):
 def editPost(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if post.author != request.user:
-        return render(request , 'donothavepermission.html')
-    
+        return render(request , 'donothavepermission.html')   
     if request.method == 'POST':
         post.text = request.POST.get('text')
         if 'image' in request.FILES:
@@ -164,8 +131,7 @@ def editPost(request, post_id):
 def deletePost(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if post.author != request.user:
-        return render(request , 'donothavepermission.html')
-    
+        return render(request , 'donothavepermission.html')   
     if request.method == 'POST':
         post.delete()
         return redirect('myposts')  
@@ -173,27 +139,31 @@ def deletePost(request, post_id):
     return render(request, 'confirmdelete.html', {'post': post})
 
 
-
-
 @login_required(login_url='/login_register/')
-def send_message(request):
+def chatroom(request, recipient_username):
+    recipient = get_user_model().objects.get(username=recipient_username)
     if request.method == 'POST':
-        recipient_username = request.POST.get('recipient')
         content = request.POST.get('content')
-        recipient = get_user_model().objects.get(username=recipient_username)
-        message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
-        return redirect('inbox')
-    users = get_user_model().objects.exclude(username=request.user.username)
-    return render(request, 'send_message.html', {'users': users})
-
-@login_required(login_url='/login_register/')
-def inbox(request):
-    received_messages = Message.objects.filter(recipient=request.user)
-    sent_messages = Message.objects.filter(sender=request.user)
-    return render(request, 'inbox.html', {'received_messages': received_messages, 'sent_messages': sent_messages})
-
-
-def direct(request):
-    return render (request , 'chatbox.html')
+        if content:
+            Message.objects.create(sender=request.user, recipient=recipient, content=content)
+        return redirect('chatroom', recipient_username=recipient_username)
+    
+    messages = Message.objects.filter(
+        (Q(sender=request.user) & Q(recipient=recipient)) |
+        (Q(sender=recipient) & Q(recipient=request.user))
+    ).order_by('timestamp')
+    
+    return render(request, 'chatroom.html', {'recipient': recipient, 'messages': messages})
 
 
+@login_required
+def my_chats(request):
+    user = request.user
+    sent_chats = Message.objects.filter(sender=user).values('recipient__username').distinct()
+    received_chats = Message.objects.filter(recipient=user).values('sender__username').distinct()
+    
+    # Combine both querysets and remove duplicates
+    chats = set(chat['recipient__username'] for chat in sent_chats).union(
+            set(chat['sender__username'] for chat in received_chats))
+    
+    return render(request, 'my_chats.html', {'chats': chats})
