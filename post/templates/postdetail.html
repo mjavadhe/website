@@ -39,7 +39,7 @@
                                 
                                 <h2>Comments</h2>
                                 {%endif%}
-                                    <p>writer: <a href="/users/{{ comment.author.pk }}/">{{ comment.author.username }}</a> <br> commet: {{ comment.text }}</p>
+                                    <p><a href="/users/{{ comment.author.pk }}/">{{ comment.author.username }}</a> : {{ comment.text }}</p>
                                         -------
                                 {% endfor %}
                                 <br>

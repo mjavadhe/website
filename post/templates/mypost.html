@@ -18,36 +18,27 @@
                                 <h2><a href="/users/{{ post.author.pk }}/">{{ post.author.username }}</a></h2>
                             </p>
                             {% if post.image %}
-                                <center><img class="Image" name="Image" src="{{ post.image.url }}" alt="Post Image" style="max-width: 100%; height: auto;"><br></center><br>
+                                <center><a href="/posts/{{ post.id }}/"><img class="Image" name="Image" src="{{ post.image.url }}" alt="Post Image" style="max-width: 100%; height: auto;"></a><br></center><br>
                             {% endif %}
                             <div align=center class="input-group mb-3">
                                 <button type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
-                                    caption & comments                
+                                    caption & comments                  
                                 </button>
-                                <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
+                                <a href="{% url 'editpost' post.id %}"><button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
                                     edit               
-                                </button> &nbsp;
-                                <button class="btn btn-danger" type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
+                                </a></button> &nbsp;&nbsp;
+                                <a href="{% url 'deletepost' post.id %}"><button class="btn btn-danger" type="button" data-toggle="collapse" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
                                     delete                
-                                </button>
+                                </a></button>
                                 <div class="collapse" id="collapseExample{{ forloop.counter }}">
                                     <div class="card card-body">
                                         <h2>Caption</h2>
-                                        -------------------------------
+                                        -------------------------
                                         <center>{{ post.text }}</center>
-                                        <div class="collapse" id="collapseExample{{ forloop.counter }}">
-                                            <div class="card card-body">
-                                                {% for comment in comments %}
-                                                    {% if forloop.first %}
-                                                        <h2>Comments</h2>
-                                                    {% endif %}
-                                                    <p>writer: <a href="/users/{{ comment.author.pk }}/">{{ comment.author.username }}</a> <br> comment: {{ comment.text }}</p>
-                                                    -------
-                                                {% endfor %}
-                                                <br>
-                                                <button><a href="/commentlist/{{post.id}}/comments/">Create a Comment for this post</a></button>            
-                                            </div>
-                                        </div>  
+                                        <a href="/posts/{{ post.id }}/"><button type="button" data-target="#collapseExample{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample{{ forloop.counter }}">
+                                            comments                  
+                                        </a></button>
+                                       
                                     </div>
                                 </div>
                             </div>

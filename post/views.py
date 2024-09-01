@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponseRedirect , JsonResponse
+from django.http import HttpResponseRedirect , JsonResponse ,HttpResponseForbidden
 from .models import Post , Comment , CustomUser
 from django.http import HttpResponseRedirect, JsonResponse
-from .models import Post, Comment, CustomUser
+from .models import Post, Comment, CustomUser , Message
 from .forms import PostForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate , get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 import random
@@ -142,3 +142,58 @@ def userProfile(request, usersId):
 def myposts(request):
     posts = Post.objects.filter(author=request.user)
     return render(request, 'mypost.html', {'posts': posts})
+
+
+@login_required(login_url='/login_register/')
+def editPost(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if post.author != request.user:
+        return render(request , 'donothavepermission.html')
+    
+    if request.method == 'POST':
+        post.text = request.POST.get('text')
+        if 'image' in request.FILES:
+            post.image = request.FILES['image']
+        post.save()
+        return redirect('post_detail', post_id=post.id)
+    
+    return render(request, 'editpost.html', {'post': post})
+
+
+@login_required(login_url='/login_register/')
+def deletePost(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if post.author != request.user:
+        return render(request , 'donothavepermission.html')
+    
+    if request.method == 'POST':
+        post.delete()
+        return redirect('myposts')  
+    
+    return render(request, 'confirmdelete.html', {'post': post})
+
+
+
+
+@login_required(login_url='/login_register/')
+def send_message(request):
+    if request.method == 'POST':
+        recipient_username = request.POST.get('recipient')
+        content = request.POST.get('content')
+        recipient = get_user_model().objects.get(username=recipient_username)
+        message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
+        return redirect('inbox')
+    users = get_user_model().objects.exclude(username=request.user.username)
+    return render(request, 'send_message.html', {'users': users})
+
+@login_required(login_url='/login_register/')
+def inbox(request):
+    received_messages = Message.objects.filter(recipient=request.user)
+    sent_messages = Message.objects.filter(sender=request.user)
+    return render(request, 'inbox.html', {'received_messages': received_messages, 'sent_messages': sent_messages})
+
+
+def direct(request):
+    return render (request , 'chatbox.html')
+
+

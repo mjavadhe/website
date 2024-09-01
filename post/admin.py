@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser , Post , Comment
+from .models import CustomUser , Post , Comment , Message
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -21,3 +21,10 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Comment, CommentAdmin)
+
+
+class MessageAdmin(admin.ModelAdmin):
+    listDisplay = ['sender', 'recipient', 'content', 'timestamp']
+
+
+admin.site.register(Message, MessageAdmin)

@@ -1,0 +1,13 @@
+<h2>Inbox</h2>
+<ul>
+    {% for message in received_messages %}
+        <li>{{ message.sender }}: {{ message.content }} ({{ message.timestamp }})</li>
+    {% endfor %}
+</ul>
+
+<h2>Sent Messages</h2>
+<ul>
+    {% for message in sent_messages %}
+        <li>To {{ message.recipient }}: {{ message.content }} ({{ message.timestamp }})</li>
+    {% endfor %}
+</ul>

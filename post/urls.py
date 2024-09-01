@@ -17,5 +17,15 @@ urlpatterns = [
     path('posts/new/', views.createPost, name='create_post'),
     path('users/<int:usersId>/', views.userProfile, name='user_detail'),
     path('myposts/', views.myposts, name='myposts'),
+    path('edit/<int:post_id>/', views.editPost, name='editpost'),
+    path('delete/<int:post_id>/', views.deletePost, name='deletepost'),
+
+    path('send_message/', views.send_message, name='send_message'),
+    path('inbox/', views.inbox, name='inbox'),
+    path('direct/',views.direct)
+
+
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -100,7 +100,7 @@ button a {
 
 
 <form method="Post" enctype="multipart/form-data">
-    <p align="center">Create a New Post</p>
+    <p align="center">update your post</p>
     {% csrf_token %}
     <!--    <label for="title">Title:</label>
     <input type="text" id="title" name="title" maxlength="50" required><br>   -->
@@ -108,7 +108,7 @@ button a {
     <textarea id="text" name="text" required></textarea><br>
     <form method="file">
     <label for="image">Image:</label>
-    <input type="file" id="image" name="image" required><br>
+    <input type="file" id="image" name="image" ><br>
     <button type="submit">Submit</button>
 </form>
 {% endblock %}
