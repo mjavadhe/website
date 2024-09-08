@@ -17,7 +17,9 @@
                             <p type="text" id="title" name="title" maxlength="50" required>
                                 <h2><a href="/users/{{ post.author.pk }}/">{{ post.author.username }}</a></h2>
                             </p>
-                            {% if post.image %}
+                            {% if post.video %}
+                                <a href="/posts/{{ post.id }}/"><video src="{{ post.video.url }}" controls alt="{{ post.title }}"  style="max-width: 100%; height: auto;"></video></a>
+                            {% elif post.image %}
                                 <center><a href="/posts/{{ post.id }}/"><img class="Image" name="Image" src="{{ post.image.url }}" alt="Post Image" style="max-width: 100%; height: auto;"></a><br></center><br>
                             {% endif %}
                             <div align=center class="input-group mb-3">

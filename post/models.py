@@ -26,6 +26,7 @@ class Post(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     text = models.TextField()
     image = models.ImageField(upload_to='post_images/')
+    video = models.FileField(upload_to='post_images/')
 
 """    def __str__(self):
         return self.author"""

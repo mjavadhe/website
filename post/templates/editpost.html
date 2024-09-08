@@ -98,19 +98,16 @@ button a {
 }
 </style>
 
-
-<form method="Post" enctype="multipart/form-data">
-    <p align="center">update your post</p>
+<form method="POST" enctype="multipart/form-data">
+    <p align="center">Update your post</p>
     {% csrf_token %}
-    <!--    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" maxlength="50" required><br>   -->
-    <label for="text">caption:</label>
-    <textarea id="text" name="text" required></textarea><br>
-    <form method="file">
-    <label for="image">Image:</label>
-    <input type="file" id="image" name="image" ><br>
+    <label for="text">Caption:</label>
+    <textarea id="text" name="text" required>{{ post.text }}</textarea><br>
+    <label for="file">Image or Video:</label>
+    <input type="file" id="file" name="file"><br>
     <button type="submit">Submit</button>
 </form>
+
 {% endblock %}
 </body>
 </html>

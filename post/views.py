@@ -4,11 +4,11 @@ from django.http import HttpResponseRedirect
 from .models import Post , Comment , CustomUser
 from django.http import HttpResponseRedirect
 from .models import Post, Comment, CustomUser , Message
-from .forms import PostForm
 from django.contrib.auth import login, authenticate , get_user_model ,logout
 from django.contrib.auth.decorators import login_required
 import random
 from django.db.models import Q
+import mimetypes
 
 
 
@@ -23,10 +23,11 @@ def homePage(request):
     return render(request, 'homepage.html')
 
 
+@login_required(login_url='/login_register/')
 def postList(request):
     posts = list(Post.objects.all())
     random.shuffle(posts)
-    return render(request, 'postlist.html', {'posts': posts})
+    return render(request, 'explore.html', {'posts': posts})
 
 
 @login_required(login_url='/login_register/')
@@ -49,7 +50,7 @@ def createComment(request, postId):
     return render(request, 'createcomment.html', {'post': post})
 
 
-@login_required(login_url='/login_register/')
+"""@login_required(login_url='/login_register/')
 def createPost(request):
     user = CustomUser.objects.all()
     if request.method == 'POST':
@@ -61,6 +62,25 @@ def createPost(request):
                 post.image = image
             post.save()
             return redirect('post_detail', post_id=post.id)
+    return render(request, 'createpost.html', {'user': user})
+"""
+@login_required(login_url='/login_register/')
+def createPost(request):
+    user = CustomUser.objects.all()
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        image = request.FILES.get('image')
+        video = request.FILES.get('video')
+        post = Post(author=request.user, text=text , image=image , video=video)
+        post.text = request.POST.get('text')
+        if 'file' in request.FILES:
+            uploaded_file = request.FILES['file']
+            if uploaded_file.content_type.startswith('image/'):
+                post.image = uploaded_file
+            elif uploaded_file.content_type.startswith('video/'):
+                post.video = uploaded_file
+        post.save()
+        return redirect('post_detail', post_id=post.id)
     return render(request, 'createpost.html', {'user': user})
 
 
@@ -116,14 +136,17 @@ def myposts(request):
 def editPost(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if post.author != request.user:
-        return render(request , 'donothavepermission.html')   
+        return render(request, 'donothavepermission.html')   
     if request.method == 'POST':
         post.text = request.POST.get('text')
-        if 'image' in request.FILES:
-            post.image = request.FILES['image']
+        if 'file' in request.FILES:
+            uploaded_file = request.FILES['file']
+            if uploaded_file.content_type.startswith('image/'):
+                post.image = uploaded_file
+            elif uploaded_file.content_type.startswith('video/'):
+                post.video = uploaded_file
         post.save()
         return redirect('post_detail', post_id=post.id)
-    
     return render(request, 'editpost.html', {'post': post})
 
 

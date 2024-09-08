@@ -15,11 +15,14 @@
                 <p type="text" id="title" name="title" maxlength="50" required>
                     <h2><a href="/users/{{ post.author.pk }}/">{{ post.author.username }}</a></h2>
                 </p>
-                {% if post.image %}
-                    </p><br>
-                    <p></p>
-                     <center><img src="{{ post.image.url }}" alt="Post Image" style="max-width: 100%; height: auto;"><br></center><br>
-                {% endif %}
+                    <center>
+                                {% if post.image %}
+                                    <img src="{{ post.image.url }}" style="max-width: 100%; height: auto;">
+                                {% elif post.video %}
+                                    <video src="{{ post.video.url }}"  width="320" height="240" controls alt="{{ post.title }}"></video>
+                                {% endif %}
+
+                    </center>
                <div align=center class="input-group mb-3">
                     <button type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     caption & comments                
