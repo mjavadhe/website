@@ -4,11 +4,13 @@ from django.http import HttpResponseRedirect
 from .models import Post , Comment , CustomUser
 from django.http import HttpResponseRedirect
 from .models import Post, Comment, CustomUser , Message
-from django.contrib.auth import login, authenticate , get_user_model ,logout
+from django.contrib.auth import login, authenticate , get_user_model ,logout , update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 import random
 from django.db.models import Q
 import mimetypes
+from django.contrib import messages
+
 
 
 
@@ -179,7 +181,7 @@ def chatroom(request, recipient_username):
     return render(request, 'chatroom.html', {'recipient': recipient, 'messages': messages})
 
 
-@login_required
+@login_required(login_url='/login_register/')
 def my_chats(request):
     user = request.user
     sent_chats = Message.objects.filter(sender=user).values('recipient__username').distinct()
@@ -190,3 +192,41 @@ def my_chats(request):
             set(chat['sender__username'] for chat in received_chats))
     
     return render(request, 'my_chats.html', {'chats': chats})
+
+
+
+
+User = get_user_model()
+
+@login_required(login_url='/login_register/')
+def edit_profile(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        user = request.user
+        user.username = username
+        user.email = email
+        user.save()
+        return redirect('profile')  # Redirect to profile page after saving changes
+    return render(request, 'editprofile.html')
+    
+@login_required(login_url='/login_register/')
+
+def change_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
+
+        if not request.user.check_password(old_password):
+            messages.error(request, 'Old password is incorrect.')
+        elif new_password1 != new_password2:
+            messages.error(request, 'New passwords do not match.')
+        else:
+            request.user.set_password(new_password1)
+            request.user.save()
+            update_session_auth_hash(request, request.user)  # Keep the user logged in after password change
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('profile')  # Redirect to profile page after changing password
+
+    return render(request, 'changepassword.html')

@@ -21,5 +21,8 @@ urlpatterns = [
     path('delete/<int:post_id>/', views.deletePost, name='deletepost'),
     path('chatroom/<str:recipient_username>/', views.chatroom, name='chatroom'),
     path('my_chats/', views.my_chats, name='my_chats'),
+    path('edit_profile/', views.edit_profile, name='edit_profile'),
+    path('change_password/', views.change_password, name='change_password'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -8,7 +8,9 @@
     <p>Username: {{ user.username }}</p>
     <p>Email: {{ user.email }}</p>
     <p>Date joined: {{ user.date_joined|date:"Y-m-d" }}</p>
-    <a href="#" class="btn btn-outline-success">edit profile</a>
+    <a href="/edit_profile/" class="btn btn-outline-success">edit profile</a>
+	<a href="/change_password/" class="btn btn-outline-success">edit password</a>
+
 <style>
 .btn btn-outline-success {
     display: inline-block;
